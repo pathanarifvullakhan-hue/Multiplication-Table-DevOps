@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Multiplication Table</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 420px; margin: 40px auto; text-align: center; }
+    input { padding: 8px; width: 120px; font-size: 16px; }
+    button { padding: 8px 16px; font-size: 16px; cursor: pointer; }
+    table { margin: 20px auto; border-collapse: collapse; width: 80%; }
+    td { border: 1px solid #999; padding: 6px; }
+    #error { color: #c00; margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <h1 id="title">Multiplication Table</h1>
+  <input type="number" id="number" placeholder="Enter a number">
+  <button id="generate">Generate</button>
+  <p id="error"></p>
+  <table id="result-table"><tbody></tbody></table>
+
+  <script>
+    const input = document.getElementById('number');
+    const error = document.getElementById('error');
+    const tbody = document.querySelector('#result-table tbody');
+
+    async function generate() {
+      error.textContent = '';
+      tbody.innerHTML = '';
+      const res = await fetch('/api/table?number=' + encodeURIComponent(input.value));
+      const data = await res.json();
+      if (!res.ok) {
+        error.textContent = data.error;
+        return;
+      }
+      data.forEach((row) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = '<td>' + row.text + '</td>';
+        tbody.appendChild(tr);
+      });
+    }
+
+    document.getElementById('generate').addEventListener('click', generate);
+  </script>
+</body>
+</html>

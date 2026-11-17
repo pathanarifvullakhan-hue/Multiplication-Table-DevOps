@@ -1,0 +1,6 @@
+services:
+  multiplication-app:
+    build: .
+    container_name: multiplication-app
+    ports:
+      - "3000:3000"
